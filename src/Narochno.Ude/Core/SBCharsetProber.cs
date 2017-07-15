@@ -40,7 +40,6 @@ using System;
 
 namespace Narochno.Ude.Core
 {
-
     public class SingleByteCharSetProber : CharsetProber
     {
         private const int SAMPLE_SIZE = 64;
@@ -49,68 +48,72 @@ namespace Narochno.Ude.Core
         private const float NEGATIVE_SHORTCUT_THRESHOLD = 0.05f;
         private const int SYMBOL_CAT_ORDER = 250;
         private const int NUMBER_OF_SEQ_CAT = 4;
-        private const int POSITIVE_CAT = NUMBER_OF_SEQ_CAT-1;
+        private const int POSITIVE_CAT = NUMBER_OF_SEQ_CAT - 1;
         private const int NEGATIVE_CAT = 0;
-        
+
         protected SequenceModel model;
-        
+
         // true if we need to reverse every pair in the model lookup        
-        bool reversed; 
+        readonly bool reversed;
 
         // char order of last character
         byte lastOrder;
 
         int totalSeqs;
         int totalChar;
-        int[] seqCounters = new int[NUMBER_OF_SEQ_CAT];
-        
+        readonly int[] seqCounters = new int[NUMBER_OF_SEQ_CAT];
+
         // characters that fall in our sampling range
         int freqChar;
-  
+
         // Optional auxiliary prober for name decision. created and destroyed by the GroupProber
-        CharsetProber nameProber; 
-                    
-        public SingleByteCharSetProber(SequenceModel model) 
+        readonly CharsetProber nameProber;
+
+        public SingleByteCharSetProber(SequenceModel model)
             : this(model, false, null)
         {
-            
         }
-    
-        public SingleByteCharSetProber(SequenceModel model, bool reversed, 
-                                       CharsetProber nameProber)
+
+        public SingleByteCharSetProber(SequenceModel model, bool reversed,
+            CharsetProber nameProber)
         {
             this.model = model;
             this.reversed = reversed;
             this.nameProber = nameProber;
-            Reset();            
+            Reset();
         }
 
         public override ProbingState HandleData(byte[] buf, int offset, int len)
         {
             int max = offset + len;
-            
-            for (int i = offset; i < max; i++) {
+
+            for (int i = offset; i < max; i++)
+            {
                 byte order = model.GetOrder(buf[i]);
 
                 if (order < SYMBOL_CAT_ORDER)
                     totalChar++;
-                    
-                if (order < SAMPLE_SIZE) {
+
+                if (order < SAMPLE_SIZE)
+                {
                     freqChar++;
 
-                    if (lastOrder < SAMPLE_SIZE) {
+                    if (lastOrder < SAMPLE_SIZE)
+                    {
                         totalSeqs++;
                         if (!reversed)
-                            ++(seqCounters[model.GetPrecedence(lastOrder*SAMPLE_SIZE+order)]);
+                            ++(seqCounters[model.GetPrecedence(lastOrder * SAMPLE_SIZE + order)]);
                         else // reverse the order of the letters in the lookup
-                            ++(seqCounters[model.GetPrecedence(order*SAMPLE_SIZE+lastOrder)]);
+                            ++(seqCounters[model.GetPrecedence(order * SAMPLE_SIZE + lastOrder)]);
                     }
                 }
                 lastOrder = order;
             }
 
-            if (state == ProbingState.Detecting) {
-                if (totalSeqs > SB_ENOUGH_REL_THRESHOLD) {
+            if (state == ProbingState.Detecting)
+            {
+                if (totalSeqs > SB_ENOUGH_REL_THRESHOLD)
+                {
                     float cf = GetConfidence();
                     if (cf > POSITIVE_SHORTCUT_THRESHOLD)
                         state = ProbingState.FoundIt;
@@ -120,10 +123,10 @@ namespace Narochno.Ude.Core
             }
             return state;
         }
-                
+
         public override void DumpStatus()
         {
-            Console.WriteLine("  SBCS: {0} [{1}]", GetConfidence(), 
+            Console.WriteLine("  SBCS: {0} [{1}]", GetConfidence(),
                 GetCharsetName());
         }
 
@@ -140,16 +143,17 @@ namespace Narochno.Ude.Core
             // POSITIVE_APPROACH
             float r = 0.0f;
 
-            if (totalSeqs > 0) {
+            if (totalSeqs > 0)
+            {
                 r = 1.0f * seqCounters[POSITIVE_CAT] / totalSeqs / model.TypicalPositiveRatio;
                 r = r * freqChar / totalChar;
                 if (r >= 1.0f)
                     r = 0.99f;
                 return r;
             }
-            return 0.01f;            
+            return 0.01f;
         }
-        
+
         public override void Reset()
         {
             state = ProbingState.Detecting;
@@ -160,12 +164,12 @@ namespace Narochno.Ude.Core
             totalChar = 0;
             freqChar = 0;
         }
-        
-        public override string GetCharsetName() 
+
+        public override string GetCharsetName()
         {
-            return (nameProber == null) ? model.CharsetName
-                                        : nameProber.GetCharsetName();
+            return (nameProber == null)
+                ? model.CharsetName
+                : nameProber.GetCharsetName();
         }
-        
     }
 }

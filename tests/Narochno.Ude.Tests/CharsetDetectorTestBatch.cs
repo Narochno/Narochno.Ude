@@ -15,8 +15,8 @@ namespace Narochno.Ude.Tests
     {
         // Path.GetDirectoryName (Assembly.GetExecutingAssembly ().Location)
         const string DATA_ROOT = "../../Data";
-        
-        ICharsetDetector detector;
+
+        readonly ICharsetDetector detector;
         
         public CharsetDetectorTestBatch()
         {

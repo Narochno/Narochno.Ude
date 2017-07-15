@@ -46,13 +46,15 @@ namespace Narochno.Ude.Core
     public class MBCSGroupProber : CharsetProber
     {
         private const int PROBERS_NUM = 7;
-        private readonly static string[] ProberName = 
-            { "UTF8", "SJIS", "EUCJP", "GB18030", "EUCKR", "Big5", "EUCTW" };
-        private CharsetProber[] probers = new CharsetProber[PROBERS_NUM];
-        private bool[] isActive = new bool[PROBERS_NUM];
+
+        private readonly static string[] ProberName =
+            {"UTF8", "SJIS", "EUCJP", "GB18030", "EUCKR", "Big5", "EUCTW"};
+
+        private readonly CharsetProber[] probers = new CharsetProber[PROBERS_NUM];
+        private readonly bool[] isActive = new bool[PROBERS_NUM];
         private int bestGuess;
         private int activeNum;
-            
+
         public MBCSGroupProber()
         {
             probers[0] = new UTF8Prober();
@@ -62,12 +64,13 @@ namespace Narochno.Ude.Core
             probers[4] = new EUCKRProber();
             probers[5] = new Big5Prober();
             probers[6] = new EUCTWProber();
-            Reset();        
+            Reset();
         }
 
         public override string GetCharsetName()
         {
-            if (bestGuess == -1) {
+            if (bestGuess == -1)
+            {
                 GetConfidence();
                 if (bestGuess == -1)
                     bestGuess = 0;
@@ -78,13 +81,17 @@ namespace Narochno.Ude.Core
         public override void Reset()
         {
             activeNum = 0;
-            for (int i = 0; i < probers.Length; i++) {
-                if (probers[i] != null) {
-                   probers[i].Reset();
-                   isActive[i] = true;
-                   ++activeNum;
-                } else {
-                   isActive[i] = false;
+            for (int i = 0; i < probers.Length; i++)
+            {
+                if (probers[i] != null)
+                {
+                    probers[i].Reset();
+                    isActive[i] = true;
+                    ++activeNum;
+                }
+                else
+                {
+                    isActive[i] = false;
                 }
             }
             bestGuess = -1;
@@ -99,34 +106,44 @@ namespace Narochno.Ude.Core
             //assume previous is not ascii, it will do no harm except add some noise
             bool keepNext = true;
             int max = offset + len;
-            
-            for (int i = offset; i < max; i++) {
-                if ((buf[i] & 0x80) != 0) {
+
+            for (int i = offset; i < max; i++)
+            {
+                if ((buf[i] & 0x80) != 0)
+                {
                     highbyteBuf[hptr++] = buf[i];
                     keepNext = true;
-                } else {
+                }
+                else
+                {
                     //if previous is highbyte, keep this even it is a ASCII
-                    if (keepNext) {
+                    if (keepNext)
+                    {
                         highbyteBuf[hptr++] = buf[i];
                         keepNext = false;
                     }
                 }
             }
-            
+
             ProbingState st = ProbingState.NotMe;
-            
-            for (int i = 0; i < probers.Length; i++) {
+
+            for (int i = 0; i < probers.Length; i++)
+            {
                 if (!isActive[i])
                     continue;
                 st = probers[i].HandleData(highbyteBuf, 0, hptr);
-                if (st == ProbingState.FoundIt) {
+                if (st == ProbingState.FoundIt)
+                {
                     bestGuess = i;
                     state = ProbingState.FoundIt;
                     break;
-                } else if (st == ProbingState.NotMe) {
+                }
+                else if (st == ProbingState.NotMe)
+                {
                     isActive[i] = false;
                     activeNum--;
-                    if (activeNum <= 0) {
+                    if (activeNum <= 0)
+                    {
                         state = ProbingState.NotMe;
                         break;
                     }
@@ -139,17 +156,24 @@ namespace Narochno.Ude.Core
         {
             float bestConf = 0.0f;
             float cf = 0.0f;
-            
-            if (state == ProbingState.FoundIt) {
+
+            if (state == ProbingState.FoundIt)
+            {
                 return 0.99f;
-            } else if (state == ProbingState.NotMe) {
+            }
+            else if (state == ProbingState.NotMe)
+            {
                 return 0.01f;
-            } else {
-                for (int i = 0; i < PROBERS_NUM; i++) {
+            }
+            else
+            {
+                for (int i = 0; i < PROBERS_NUM; i++)
+                {
                     if (!isActive[i])
                         continue;
                     cf = probers[i].GetConfidence();
-                    if (bestConf < cf) {
+                    if (bestConf < cf)
+                    {
                         bestConf = cf;
                         bestGuess = i;
                     }
@@ -162,11 +186,15 @@ namespace Narochno.Ude.Core
         {
             float cf;
             GetConfidence();
-            for (int i = 0; i < PROBERS_NUM; i++) {
-                if (!isActive[i]) {
-                    Console.WriteLine("  MBCS inactive: {0} (confidence is too low).", 
-                         ProberName[i]);
-                } else {
+            for (int i = 0; i < PROBERS_NUM; i++)
+            {
+                if (!isActive[i])
+                {
+                    Console.WriteLine("  MBCS inactive: {0} (confidence is too low).",
+                        ProberName[i]);
+                }
+                else
+                {
                     cf = probers[i].GetConfidence();
                     Console.WriteLine("  MBCS {0}: [{1}]", cf, ProberName[i]);
                 }

@@ -137,7 +137,6 @@ using System;
  */
 namespace Narochno.Ude.Core
 {
-    
     /// <summary>
     /// This prober doesn't actually recognize a language or a charset.
     /// It is a helper prober for the use of the Hebrew model probers
@@ -145,11 +144,12 @@ namespace Narochno.Ude.Core
     public class HebrewProber : CharsetProber
     {
         // windows-1255 / ISO-8859-8 code points of interest
-        private const byte FINAL_KAF  = 0xEA;
+        private const byte FINAL_KAF = 0xEA;
+
         private const byte NORMAL_KAF = 0xEB;
-        private const byte FINAL_MEM  = 0xED;
+        private const byte FINAL_MEM = 0xED;
         private const byte NORMAL_MEM = 0xEE;
-        private const byte FINAL_NUN  = 0xEF;
+        private const byte FINAL_NUN = 0xEF;
         private const byte NORMAL_NUN = 0xF0;
         private const byte FINAL_PE = 0xF3;
         private const byte NORMAL_PE = 0xF4;
@@ -166,25 +166,26 @@ namespace Narochno.Ude.Core
 
         protected const string VISUAL_HEBREW_NAME = "ISO-8859-8";
         protected const string LOGICAL_HEBREW_NAME = "windows-1255";
-        
+
         // owned by the group prober.
         protected CharsetProber logicalProber, visualProber;
-        protected int finalCharLogicalScore, finalCharVisualScore;      
-        
+
+        protected int finalCharLogicalScore, finalCharVisualScore;
+
         // The two last bytes seen in the previous buffer.
         protected byte prev, beforePrev;
-                
+
         public HebrewProber()
         {
             Reset();
         }
-         
-        public void SetModelProbers(CharsetProber logical, CharsetProber visual) 
-        { 
-            logicalProber = logical; 
-            visualProber = visual; 
+
+        public void SetModelProbers(CharsetProber logical, CharsetProber visual)
+        {
+            logicalProber = logical;
+            visualProber = visual;
         }
-        
+
         /** 
          * Final letter analysis for logical-visual decision.
          * Look for evidence that the received buffer is either logical Hebrew or 
@@ -218,25 +219,28 @@ namespace Narochno.Ude.Core
 
             int max = offset + len;
 
-            for (int i = offset; i < max; i++) {
-                
+            for (int i = offset; i < max; i++)
+            {
                 byte b = buf[i];
-                
+
                 // a word just ended
-                if (b == 0x20) {
+                if (b == 0x20)
+                {
                     // *(curPtr-2) was not a space so prev is not a 1 letter word
-                    if (beforePrev != 0x20) {
+                    if (beforePrev != 0x20)
+                    {
                         // case (1) [-2:not space][-1:final letter][cur:space]
-                        if (IsFinal(prev)) 
+                        if (IsFinal(prev))
                             finalCharLogicalScore++;
                         // case (2) [-2:not space][-1:Non-Final letter][cur:space]                        
                         else if (IsNonFinal(prev))
                             finalCharVisualScore++;
                     }
-                    
-                } else {
+                }
+                else
+                {
                     // case (3) [-2:space][-1:final letter][cur:not space]
-                    if ((beforePrev == 0x20) && (IsFinal(prev)) && (b != ' ')) 
+                    if ((beforePrev == 0x20) && (IsFinal(prev)) && (b != ' '))
                         ++finalCharVisualScore;
                 }
                 beforePrev = prev;
@@ -253,7 +257,7 @@ namespace Narochno.Ude.Core
         {
             // If the final letter score distance is dominant enough, rely on it.
             int finalsub = finalCharLogicalScore - finalCharVisualScore;
-            if (finalsub >= MIN_FINAL_CHAR_DISTANCE) 
+            if (finalsub >= MIN_FINAL_CHAR_DISTANCE)
                 return LOGICAL_HEBREW_NAME;
             if (finalsub <= -(MIN_FINAL_CHAR_DISTANCE))
                 return VISUAL_HEBREW_NAME;
@@ -264,9 +268,9 @@ namespace Narochno.Ude.Core
                 return LOGICAL_HEBREW_NAME;
             if (modelsub < -(MIN_MODEL_DISTANCE))
                 return VISUAL_HEBREW_NAME;
-            
+
             // Still no good, back to final letter distance, maybe it'll save the day.
-            if (finalsub < 0) 
+            if (finalsub < 0)
                 return VISUAL_HEBREW_NAME;
 
             // (finalsub > 0 - Logical) or (don't know what to do) default to Logical.
@@ -281,10 +285,10 @@ namespace Narochno.Ude.Core
             beforePrev = 0x20;
         }
 
-        public override ProbingState GetState() 
+        public override ProbingState GetState()
         {
             // Remain active as long as any of the model probers are active.
-            if (logicalProber.GetState() == ProbingState.NotMe && 
+            if (logicalProber.GetState() == ProbingState.NotMe &&
                 visualProber.GetState() == ProbingState.NotMe)
                 return ProbingState.NotMe;
             return ProbingState.Detecting;
@@ -292,21 +296,21 @@ namespace Narochno.Ude.Core
 
         public override void DumpStatus()
         {
-            Console.WriteLine("  HEB: {0} - {1} [Logical-Visual score]", 
-               finalCharLogicalScore, finalCharVisualScore);
+            Console.WriteLine("  HEB: {0} - {1} [Logical-Visual score]",
+                finalCharLogicalScore, finalCharVisualScore);
         }
-        
+
         public override float GetConfidence()
-        { 
+        {
             return 0.0f;
         }
-        
+
         protected static bool IsFinal(byte b)
         {
-            return (b == FINAL_KAF || b == FINAL_MEM || b == FINAL_NUN 
-                    || b == FINAL_PE || b == FINAL_TSADI);        
+            return (b == FINAL_KAF || b == FINAL_MEM || b == FINAL_NUN
+                    || b == FINAL_PE || b == FINAL_TSADI);
         }
-        
+
         protected static bool IsNonFinal(byte b)
         {
             // The normal Tsadi is not a good Non-Final letter due to words like 
@@ -319,7 +323,7 @@ namespace Narochno.Ude.Core
             // example legally end with a Non-Final Pe or Kaf. However, the benefit of 
             // these letters as Non-Final letters outweighs the damage since these words 
             // are quite rare.            
-            return (b == NORMAL_KAF || b == NORMAL_MEM || b == NORMAL_NUN 
+            return (b == NORMAL_KAF || b == NORMAL_MEM || b == NORMAL_NUN
                     || b == NORMAL_PE);
         }
     }

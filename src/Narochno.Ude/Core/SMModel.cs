@@ -52,18 +52,14 @@ namespace Narochno.Ude.Core
         public BitPackage classTable;
         public BitPackage stateTable;
         public int[] charLenTable;
-        
-        private string name;
-        
-        public string Name {
-            get { return name;  }
-        }
 
-        private int classFactor;
+        private readonly string name;
 
-        public int ClassFactor {
-            get { return classFactor;  }
-        }
+        public string Name => name;
+
+        private readonly int classFactor;
+
+        public int ClassFactor => classFactor;
 
         public SMModel(BitPackage classTable, int classFactor,
             BitPackage stateTable, int[] charLenTable, String name)
@@ -74,10 +70,10 @@ namespace Narochno.Ude.Core
             this.charLenTable = charLenTable;
             this.name = name;
         }
-        
+
         public int GetClass(byte b)
-        {        
-            return classTable.Unpack((int)b);            
+        {
+            return classTable.Unpack((int) b);
         }
-    }    
+    }
 }

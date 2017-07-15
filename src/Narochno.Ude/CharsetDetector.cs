@@ -70,18 +70,17 @@ namespace Narochno.Ude
     public class CharsetDetector : UniversalDetector, ICharsetDetector
     {
         private string charset;
-        
+
         private float confidence;
-        
+
         //public event DetectorFinished Finished;
-        
+
         public CharsetDetector() : base(FILTER_ALL)
         {
-            
         }
 
         public void Feed(Stream stream)
-        { 
+        {
             byte[] buff = new byte[1024];
             int read;
             while ((read = stream.Read(buff, 0, buff.Length)) > 0 && !done)
@@ -89,27 +88,23 @@ namespace Narochno.Ude
                 Feed(buff, 0, read);
             }
         }
-        
-        public bool IsDone() 
+
+        public bool IsDone()
         {
             return done;
         }
-        
+
         public override void Reset()
         {
-            this.charset = null;
-            this.confidence = 0.0f;
+            charset = null;
+            confidence = 0.0f;
             base.Reset();
         }
-        
-        public string Charset {
-            get { return charset; }
-        }
 
-        public float Confidence {
-            get { return confidence; }
-        }
-        
+        public string Charset => charset;
+
+        public float Confidence => confidence;
+
         protected override void Report(string charset, float confidence)
         {
             this.charset = charset;
@@ -119,8 +114,6 @@ namespace Narochno.Ude
 //            }
         }
     }
-    
+
     //public delegate void DetectorFinished(string charset, float confidence);
-
 }
-
