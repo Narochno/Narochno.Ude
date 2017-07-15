@@ -38,7 +38,7 @@
 
 using System;
 
-namespace Ude.Core
+namespace Narochno.Ude.Core
 {
     // TODO: Using trigrams the detector should be able to discriminate between 
     // latin-1 and iso8859-2

@@ -36,12 +36,12 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-using System;
+
 
 /// <summary>
 /// Escaped charsets state machines
 /// </summary>
-namespace Ude.Core
+namespace Narochno.Ude.Core
 {
     public class HZSMModel : SMModel
     {

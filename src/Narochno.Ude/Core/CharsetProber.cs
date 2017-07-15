@@ -36,12 +36,9 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.IO;
 
-namespace Ude.Core
+namespace Narochno.Ude.Core
 {
     public enum ProbingState {                            
         Detecting = 0, // no sure answer yet, but caller can ask for confidence

@@ -36,12 +36,10 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-using System;
 using System.IO;
+using Narochno.Ude.Core;
 
-using Ude.Core;
-
-namespace Ude
+namespace Narochno.Ude
 {
     /// <summary>
     /// Default implementation of charset detection interface. 

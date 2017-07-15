@@ -36,9 +36,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-using System;
-
-namespace Ude.Core
+namespace Narochno.Ude.Core
 {
     /// <summary>
     /// for S-JIS encoding, observe characteristic:

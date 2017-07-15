@@ -36,11 +36,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Ude.Core
+namespace Narochno.Ude.Core
 {
     public class UTF8Prober : CharsetProber
     {

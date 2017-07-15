@@ -35,9 +35,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-using System;
-
-namespace Ude.Core
+namespace Narochno.Ude.Core
 {
     public class EUCJPProber : CharsetProber
     {

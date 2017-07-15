@@ -38,7 +38,7 @@
 
 using System.IO;
 
-namespace Ude
+namespace Narochno.Ude
 {
     public interface ICharsetDetector
     {

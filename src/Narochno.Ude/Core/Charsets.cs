@@ -35,9 +35,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-using System;
-
-namespace Ude
+namespace Narochno.Ude.Core
 {
     public static class Charsets
     {

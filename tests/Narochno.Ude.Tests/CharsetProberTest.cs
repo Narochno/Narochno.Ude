@@ -4,10 +4,10 @@
 //   Rudi Pettazzi <rudi.pettazzi@gmail.com>
 //
 
-using Ude.Core;
+using Narochno.Ude.Core;
 using Xunit;
 
-namespace Ude.Tests
+namespace Narochno.Ude.Tests
 {
     public class CharsetProberTest
     {

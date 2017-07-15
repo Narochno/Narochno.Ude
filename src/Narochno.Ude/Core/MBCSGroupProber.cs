@@ -38,7 +38,7 @@
 
 using System;
 
-namespace Ude.Core
+namespace Narochno.Ude.Core
 {
     /// <summary>
     /// Multi-byte charsets probers

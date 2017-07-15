@@ -4,11 +4,12 @@
 //   Rudi Pettazzi <rudi.pettazzi@gmail.com>
 //
 
-using System.Text;
 using System.IO;
+using System.Text;
+using Narochno.Ude.Core;
 using Xunit;
 
-namespace Ude.Tests
+namespace Narochno.Ude.Tests
 {
     public class CharsetDetectorTest
     {

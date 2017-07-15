@@ -35,9 +35,8 @@
  * the terms of any one of the MPL, the GPL or the LGPL.
  *
  * ***** END LICENSE BLOCK ***** */
-using System;
 
-namespace Ude
+namespace Narochno.Ude
 {
     /// <summary>
     /// Indicate how confident the detection module about the return result.

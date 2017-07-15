@@ -36,9 +36,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-using System;
-
-namespace Ude.Core
+namespace Narochno.Ude.Core
 {
 
     enum InputState { PureASCII=0, EscASCII=1, Highbyte=2 };

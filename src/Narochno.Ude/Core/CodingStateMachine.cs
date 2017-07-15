@@ -37,9 +37,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-using System;
-
-namespace Ude.Core
+namespace Narochno.Ude.Core
 {
     /// <summary>
     /// Parallel state machine for the Coding Scheme Method

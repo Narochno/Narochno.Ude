@@ -7,9 +7,7 @@
 using System;
 using System.IO;
 
-using Ude;
-
-namespace Ude.Example
+namespace Narochno.Ude.Example
 {
     public class Udetect
     {

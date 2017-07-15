@@ -6,9 +6,10 @@
 
 using System;
 using System.IO;
+using Narochno.Ude.Core;
 using Xunit;
 
-namespace Ude.Tests
+namespace Narochno.Ude.Tests
 {
     public class CharsetDetectorTestBatch
     {
